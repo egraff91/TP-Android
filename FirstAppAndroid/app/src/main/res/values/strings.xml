@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FirstAppAndroid</string>
+    <string name="title_activity_infos">InfosActivity</string>
 </resources>
