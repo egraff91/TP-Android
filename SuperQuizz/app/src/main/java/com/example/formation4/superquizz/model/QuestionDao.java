@@ -1,4 +1,6 @@
-package com.example.formation4.superquizz;
+package com.example.formation4.superquizz.model;
+
+import com.example.formation4.superquizz.model.Question;
 
 import java.util.List;
 

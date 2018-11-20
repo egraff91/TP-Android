@@ -6,10 +6,12 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/item_play"
-            android:title="Play" />
+            android:title="Play"
+            android:icon="@drawable/ic_play"/>
         <item
             android:id="@+id/item_score"
-            android:title="Score"/>
+            android:title="Score"
+            android:icon="@drawable/ic_star"/>
         <item
             android:id="@+id/item_infos"
             android:title="Infos"/>

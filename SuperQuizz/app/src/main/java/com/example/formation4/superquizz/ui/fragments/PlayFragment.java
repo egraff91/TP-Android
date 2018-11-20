@@ -1,4 +1,4 @@
-package com.example.formation4.superquizz;
+package com.example.formation4.superquizz.ui.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +8,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.formation4.superquizz.R;
+import com.example.formation4.superquizz.ui.activities.QuestionActivity;
 
 
 /**

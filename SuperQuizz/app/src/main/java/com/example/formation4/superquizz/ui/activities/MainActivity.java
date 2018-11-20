@@ -1,14 +1,10 @@
-package com.example.formation4.superquizz;
+package com.example.formation4.superquizz.ui.activities;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -18,8 +14,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.formation4.superquizz.model.Question;
+import com.example.formation4.superquizz.ui.fragments.PlayFragment;
+import com.example.formation4.superquizz.R;
+import com.example.formation4.superquizz.ui.fragments.QuestionListFragment;
+import com.example.formation4.superquizz.ui.fragments.ScoreFragment;
+import com.example.formation4.superquizz.ui.fragments.SettingsFragment;
+
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, PlayFragment.OnFragmentInteractionListener, ScoreFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, PlayFragment.OnFragmentInteractionListener, ScoreFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener, QuestionListFragment.OnListFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,14 +31,12 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-     /*   FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
+        if(savedInstanceState == null){
+            FragmentManager fragmentManager= getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            playDisplay(fragmentTransaction);
+        }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -87,9 +88,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager= getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (id == R.id.item_play) {
-            PlayFragment playFragment = new PlayFragment();
-            fragmentTransaction.replace(R.id.main_container, playFragment);
-            fragmentTransaction.commit();
+            playDisplay(fragmentTransaction);
         } else if (id == R.id.item_score) {
             ScoreFragment scoreFragment = new ScoreFragment();
             fragmentTransaction.replace(R.id.main_container, scoreFragment);
@@ -110,9 +109,22 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    public void playDisplay(FragmentTransaction fragmentTransaction){
+        QuestionListFragment questionListFragment = new QuestionListFragment();
+        fragmentTransaction.replace(R.id.main_container, questionListFragment);
+        fragmentTransaction.commit();
+    }
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onListFragmentInteraction(Question item) {
+        Intent intent = new Intent(this, QuestionActivity.class);
+        intent.putExtra("QUESTION", item);
+        startActivity(intent);
     }
 }
