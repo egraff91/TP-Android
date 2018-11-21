@@ -6,10 +6,20 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_question">QuestionActivity</string>
-    <string name="title_activity_answer">AnswerActivity</string>
+    <string name="title_activity_question">Question</string>
+    <string name="title_activity_answer">Result</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_infos">InfosActivity</string>
+    <string name="title_activity_infos">Infos</string>
+    <string name="play_item">Play</string>
+    <string name="score_item">Score</string>
+    <string name="infos_item">Infos</string>
+    <string name="settings_item">Settings</string>
+    <string name="info_text">Cette application a été créée par GRAFF Etienne</string>
+    <string name="score_display">Votre score actuel: 0/20</string>
+    <string name="button_play_text">PLAY</string>
+    <string name="add_question_item">Add question</string>
+
+
 </resources>

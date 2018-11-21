@@ -15,14 +15,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.formation4.superquizz.model.Question;
+import com.example.formation4.superquizz.ui.fragments.CreationFragment;
 import com.example.formation4.superquizz.ui.fragments.PlayFragment;
 import com.example.formation4.superquizz.R;
 import com.example.formation4.superquizz.ui.fragments.QuestionListFragment;
 import com.example.formation4.superquizz.ui.fragments.ScoreFragment;
 import com.example.formation4.superquizz.ui.fragments.SettingsFragment;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, PlayFragment.OnFragmentInteractionListener, ScoreFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener, QuestionListFragment.OnListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, PlayFragment.OnFragmentInteractionListener, ScoreFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener, QuestionListFragment.OnListFragmentInteractionListener, CreationFragment.OnFragmentInteractionListener, CreationFragment.OnCreationFragmentListener {
+
+
+    public ArrayList<Question> questions = new ArrayList<Question>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +53,23 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        Question question1 = new Question("Quelle est la capitale de la France ?", "Paris");
+        question1.addProposition("Madrid");
+        question1.addProposition("Versailles");
+        question1.addProposition("Paris");
+        question1.addProposition("Londres");
+
+        Question question2 = new Question("En quelle année l'Homme a t-il posé pour la première fois le pied sur la Lune ?", "1969");
+        question2.addProposition("1968");
+        question2.addProposition("1969");
+        question2.addProposition("1970");
+        question2.addProposition("1971");
+
+        questions.add(question1);
+        questions.add(question2);
+
     }
 
     @Override
@@ -102,6 +126,11 @@ public class MainActivity extends AppCompatActivity
             SettingsFragment settingsFragment = new SettingsFragment();
             fragmentTransaction.replace(R.id.main_container, settingsFragment);
             fragmentTransaction.commit();
+        } else if (id == R.id.item_creation){
+            CreationFragment creationFragment = new CreationFragment();
+            creationFragment.listener = this;
+            fragmentTransaction.replace(R.id.main_container, creationFragment);
+            fragmentTransaction.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -111,6 +140,9 @@ public class MainActivity extends AppCompatActivity
 
     public void playDisplay(FragmentTransaction fragmentTransaction){
         QuestionListFragment questionListFragment = new QuestionListFragment();
+        Bundle arguments = new Bundle();
+        arguments.putParcelableArrayList("Questions", this.questions);
+        questionListFragment.setArguments(arguments);
         fragmentTransaction.replace(R.id.main_container, questionListFragment);
         fragmentTransaction.commit();
     }
@@ -121,10 +153,28 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
+
     @Override
     public void onListFragmentInteraction(Question item) {
         Intent intent = new Intent(this, QuestionActivity.class);
         intent.putExtra("QUESTION", item);
         startActivity(intent);
+    }
+
+    @Override
+    public void onFragmentInteraction(Question q) {
+
+    }
+
+
+
+    @Override
+    public void createQuestion(Question q) {
+        //
+        this.questions.add(q);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        playDisplay(fragmentTransaction);
     }
 }

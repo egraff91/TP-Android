@@ -59,22 +59,7 @@ public class QuestionListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        ArrayList<Question> questions = new ArrayList<Question>();
-
-        Question question1 = new Question("Quelle est la capitale de la France ?", "Paris");
-        question1.addProposition("Madrid");
-        question1.addProposition("Versailles");
-        question1.addProposition("Paris");
-        question1.addProposition("Londres");
-
-        Question question2 = new Question("En quelle année l'Homme a t-il posé pour la première fois le pied sur la Lune ?", "1969");
-        question2.addProposition("1968");
-        question2.addProposition("1969");
-        question2.addProposition("1970");
-        question2.addProposition("1971");
-
-        questions.add(question1);
-        questions.add(question2);
+        ArrayList<Question> questions = this.getArguments().getParcelableArrayList("Questions");
 
 
         View view = inflater.inflate(R.layout.fragment_question_list, container, false);

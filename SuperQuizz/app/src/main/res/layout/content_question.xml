@@ -19,8 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:textSize="25dp"
-        android:text="question"/>
+        android:textSize="25dp" />
 
 </LinearLayout>
 
