@@ -11,9 +11,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.formation4.superquizz.database.QuestionDatabaseHelper;
 import com.example.formation4.superquizz.model.Question;
 import com.example.formation4.superquizz.ui.fragments.CreationFragment;
 import com.example.formation4.superquizz.ui.fragments.PlayFragment;
@@ -27,8 +29,6 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, PlayFragment.OnFragmentInteractionListener, ScoreFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener, QuestionListFragment.OnListFragmentInteractionListener, CreationFragment.OnFragmentInteractionListener, CreationFragment.OnCreationFragmentListener {
 
-
-    public ArrayList<Question> questions = new ArrayList<Question>();
 
 
     @Override
@@ -55,6 +55,9 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+        QuestionDatabaseHelper helper = QuestionDatabaseHelper.getInstance(this);
+        helper.deleteAllQuestions();
+
         Question question1 = new Question("Quelle est la capitale de la France ?", "Paris");
         question1.addProposition("Madrid");
         question1.addProposition("Versailles");
@@ -67,8 +70,11 @@ public class MainActivity extends AppCompatActivity
         question2.addProposition("1970");
         question2.addProposition("1971");
 
-        questions.add(question1);
-        questions.add(question2);
+        helper.addQuestion(question1);
+        helper.addQuestion(question2);
+
+        //questions.add(question1);
+        //questions.add(question2);
 
     }
 
@@ -140,9 +146,6 @@ public class MainActivity extends AppCompatActivity
 
     public void playDisplay(FragmentTransaction fragmentTransaction){
         QuestionListFragment questionListFragment = new QuestionListFragment();
-        Bundle arguments = new Bundle();
-        arguments.putParcelableArrayList("Questions", this.questions);
-        questionListFragment.setArguments(arguments);
         fragmentTransaction.replace(R.id.main_container, questionListFragment);
         fragmentTransaction.commit();
     }
@@ -171,8 +174,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void createQuestion(Question q) {
-        //
-        this.questions.add(q);
+        QuestionDatabaseHelper.getInstance(this).addQuestion(q);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         playDisplay(fragmentTransaction);

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.formation4.superquizz.R;
+import com.example.formation4.superquizz.database.QuestionDatabaseHelper;
 import com.example.formation4.superquizz.model.Question;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class QuestionListFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private QuestionDatabaseHelper helper;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -53,13 +55,16 @@ public class QuestionListFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        ArrayList<Question> questions = this.getArguments().getParcelableArrayList("Questions");
+        //ArrayList<Question> questions = this.getArguments().getParcelableArrayList("Questions");
+
 
 
         View view = inflater.inflate(R.layout.fragment_question_list, container, false);
@@ -67,7 +72,9 @@ public class QuestionListFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            helper = QuestionDatabaseHelper.getInstance(context);
+            ArrayList<Question> questions = (ArrayList<Question>)helper.getAllQuestions();
+                    RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {

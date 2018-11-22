@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.formation4.superquizz.database.QuestionDatabaseHelper;
 import com.example.formation4.superquizz.model.Question;
 import com.example.formation4.superquizz.R;
 
@@ -57,6 +58,8 @@ public class QuestionActivity extends AppCompatActivity {
             Log.d("DEBUG", "Mauvaise réponse");
             intent.setData(Uri.parse("fail"));
         }
+
+        QuestionDatabaseHelper.getInstance(this).updateQuestion(question1, clickedButton.getText().toString());
         startActivity(intent);
     }
 

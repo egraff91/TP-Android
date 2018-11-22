@@ -29,12 +29,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:background="@drawable/rounded_corner"
+
         android:layout_margin="15dp">
         <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/radio_response1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corner_radio"/>
         <android.support.design.widget.TextInputEditText
             android:id="@+id/input_response1"
             android:layout_width="match_parent"
@@ -42,6 +43,7 @@
             android:imeOptions="actionNext"
             android:nextFocusForward="@id/input_response2"
             android:inputType="text"
+            android:background="@drawable/rounded_corner_input"
             />
     </LinearLayout>
 
@@ -49,12 +51,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:background="@drawable/rounded_corner"
+
         android:layout_margin="15dp">
         <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/radio_response2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corner_radio"/>
         <android.support.design.widget.TextInputEditText
             android:id="@+id/input_response2"
             android:layout_width="match_parent"
@@ -62,18 +65,20 @@
             android:imeOptions="actionNext"
             android:nextFocusForward="@id/input_response3"
             android:inputType="text"
+            android:background="@drawable/rounded_corner_input"
             />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:background="@drawable/rounded_corner"
+
         android:layout_margin="15dp">
         <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/radio_response3"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corner_radio"/>
         <android.support.design.widget.TextInputEditText
             android:id="@+id/input_response3"
             android:layout_width="match_parent"
@@ -81,24 +86,27 @@
             android:imeOptions="actionNext"
             android:nextFocusForward="@id/input_response4"
             android:inputType="text"
+            android:background="@drawable/rounded_corner_input"
             />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:background="@drawable/rounded_corner"
+
         android:layout_margin="15dp">
         <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/radio_response4"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corner_radio"/>
         <android.support.design.widget.TextInputEditText
             android:id="@+id/input_response4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
             android:inputType="text"
+            android:background="@drawable/rounded_corner_input"
             />
     </LinearLayout>
 

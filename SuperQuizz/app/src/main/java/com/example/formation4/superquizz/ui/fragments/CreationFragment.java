@@ -75,13 +75,15 @@ public class CreationFragment extends Fragment {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_creation, container, false);
 
-        final EditText textQuestion = rootView.findViewById(R.id.input_question);
-        final EditText reponse1 = rootView.findViewById(R.id.input_response1);
-        final EditText reponse2 = rootView.findViewById(R.id.input_response2);
-        final EditText reponse3 = rootView.findViewById(R.id.input_response3);
-        final EditText reponse4 = rootView.findViewById(R.id.input_response4);
+        final EditText inputQuestion = rootView.findViewById(R.id.input_question);
+        final EditText inputResponse1 = rootView.findViewById(R.id.input_response1);
+        final EditText inputResponse2 = rootView.findViewById(R.id.input_response2);
+        final EditText inputResponse3 = rootView.findViewById(R.id.input_response3);
+        final EditText inputResponse4 = rootView.findViewById(R.id.input_response4);
 
+        /*if(){
 
+        }*/
 
         rootView.findViewById(R.id.radio_response1).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,13 +120,12 @@ public class CreationFragment extends Fragment {
         rootView.findViewById(R.id.validate_button).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                //TODO: Créer la question en BDD
-                if((reponse1.getText()!= null)){
-                    if(reponse2.getText() != null) {
+                if((inputResponse1.getText()!= null)){
+                    if(inputResponse2.getText() != null) {
 
-                    } if(reponse3.getText() != null ){
+                    } if(inputResponse3.getText() != null ){
 
-                    } if(reponse4.getText()!= null){
+                    } if(inputResponse4.getText()!= null){
 
                     }
                 }
@@ -132,19 +133,35 @@ public class CreationFragment extends Fragment {
                    Snackbar.make(v, "Sélectionnez une réponse", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                }else{
                    Log.d("DEBUG", "Valider");
-                   Log.d("DEBUG", "Question : "+textQuestion.getText());
-                   //String bonneReponse = lastRadio;
-                    /*switch(lastRadio.getResources().getResourceName(lastRadio.getId())){
+                   Log.d("DEBUG", "Question : "+inputQuestion.getText());
+                   String bonneReponse;
 
+                   switch(lastRadio.getId()){
+                       case R.id.radio_response1:
+                           bonneReponse = inputResponse1.getText().toString();
+                           break;
 
-                    }*/
-                   //Log.d("DEBUG",lastRadio.getResources().getResourceName(lastRadio.getId()) );
-                   Question question = new Question(textQuestion.getText().toString(), reponse1.getText().toString());
+                       case R.id.radio_response2:
+                           bonneReponse = inputResponse2.getText().toString();
+                            break;
+                       case R.id.radio_response3:
+                           bonneReponse = inputResponse3.getText().toString();
+                           break;
+                       case R.id.radio_response4:
+                           bonneReponse = inputResponse4.getText().toString();
+                           break;
+                       default:
+                           bonneReponse = inputResponse1.getText().toString();
+                           break;
 
-                   question.addProposition(reponse1.getText().toString());
-                   question.addProposition(reponse2.getText().toString());
-                   question.addProposition(reponse3.getText().toString());
-                   question.addProposition(reponse4.getText().toString());
+                    }
+                   Log.d("DEBUG",lastRadio.getResources().getResourceName(lastRadio.getId()));
+                   Question question = new Question(inputQuestion.getText().toString(), bonneReponse);
+
+                   question.addProposition(inputResponse1.getText().toString());
+                   question.addProposition(inputResponse2.getText().toString());
+                   question.addProposition(inputResponse3.getText().toString());
+                   question.addProposition(inputResponse4.getText().toString());
                     listener.createQuestion(question);
                }
             }
