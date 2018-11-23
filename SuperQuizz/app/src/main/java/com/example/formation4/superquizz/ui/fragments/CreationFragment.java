@@ -76,16 +76,13 @@ public class CreationFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_creation, container, false);
 
         final EditText inputQuestion = rootView.findViewById(R.id.input_question);
-        final EditText inputResponse1 = rootView.findViewById(R.id.input_response1);
-        final EditText inputResponse2 = rootView.findViewById(R.id.input_response2);
-        final EditText inputResponse3 = rootView.findViewById(R.id.input_response3);
-        final EditText inputResponse4 = rootView.findViewById(R.id.input_response4);
+        final EditText inputAnswer1 = rootView.findViewById(R.id.input_answer1);
+        final EditText inputAnswer2 = rootView.findViewById(R.id.input_answer2);
+        final EditText inputAnswer3 = rootView.findViewById(R.id.input_answer3);
+        final EditText inputAnswer4 = rootView.findViewById(R.id.input_answer4);
 
-        /*if(){
 
-        }*/
-
-        rootView.findViewById(R.id.radio_response1).setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.radio_answer1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -93,7 +90,7 @@ public class CreationFragment extends Fragment {
             }
         });
 
-        rootView.findViewById(R.id.radio_response2).setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.radio_answer2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 radioSelection(v);
@@ -101,7 +98,7 @@ public class CreationFragment extends Fragment {
             }
         });
 
-        rootView.findViewById(R.id.radio_response3).setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.radio_answer3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 radioSelection(v);
@@ -109,7 +106,7 @@ public class CreationFragment extends Fragment {
             }
         });
 
-        rootView.findViewById(R.id.radio_response4).setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.radio_answer4).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 radioSelection(v);
@@ -117,15 +114,15 @@ public class CreationFragment extends Fragment {
             }
         });
 
-        rootView.findViewById(R.id.validate_button).setOnClickListener(new View.OnClickListener(){
+        rootView.findViewById(R.id.button_validate).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                if((inputResponse1.getText()!= null)){
-                    if(inputResponse2.getText() != null) {
+                if((inputAnswer1.getText()!= null)){
+                    if(inputAnswer2.getText() != null) {
 
-                    } if(inputResponse3.getText() != null ){
+                    } if(inputAnswer3.getText() != null ){
 
-                    } if(inputResponse4.getText()!= null){
+                    } if(inputAnswer4.getText()!= null){
 
                     }
                 }
@@ -137,31 +134,31 @@ public class CreationFragment extends Fragment {
                    String bonneReponse;
 
                    switch(lastRadio.getId()){
-                       case R.id.radio_response1:
-                           bonneReponse = inputResponse1.getText().toString();
+                       case R.id.radio_answer1:
+                           bonneReponse = inputAnswer1.getText().toString();
                            break;
 
-                       case R.id.radio_response2:
-                           bonneReponse = inputResponse2.getText().toString();
+                       case R.id.radio_answer2:
+                           bonneReponse = inputAnswer2.getText().toString();
                             break;
-                       case R.id.radio_response3:
-                           bonneReponse = inputResponse3.getText().toString();
+                       case R.id.radio_answer3:
+                           bonneReponse = inputAnswer3.getText().toString();
                            break;
-                       case R.id.radio_response4:
-                           bonneReponse = inputResponse4.getText().toString();
+                       case R.id.radio_answer4:
+                           bonneReponse = inputAnswer4.getText().toString();
                            break;
                        default:
-                           bonneReponse = inputResponse1.getText().toString();
+                           bonneReponse = inputAnswer1.getText().toString();
                            break;
 
                     }
                    Log.d("DEBUG",lastRadio.getResources().getResourceName(lastRadio.getId()));
                    Question question = new Question(inputQuestion.getText().toString(), bonneReponse);
 
-                   question.addProposition(inputResponse1.getText().toString());
-                   question.addProposition(inputResponse2.getText().toString());
-                   question.addProposition(inputResponse3.getText().toString());
-                   question.addProposition(inputResponse4.getText().toString());
+                   question.addProposition(inputAnswer1.getText().toString());
+                   question.addProposition(inputAnswer2.getText().toString());
+                   question.addProposition(inputAnswer3.getText().toString());
+                   question.addProposition(inputAnswer4.getText().toString());
                     listener.createQuestion(question);
                }
             }

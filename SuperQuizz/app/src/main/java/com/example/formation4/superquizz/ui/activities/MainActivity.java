@@ -11,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -23,8 +22,6 @@ import com.example.formation4.superquizz.R;
 import com.example.formation4.superquizz.ui.fragments.QuestionListFragment;
 import com.example.formation4.superquizz.ui.fragments.ScoreFragment;
 import com.example.formation4.superquizz.ui.fragments.SettingsFragment;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, PlayFragment.OnFragmentInteractionListener, ScoreFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener, QuestionListFragment.OnListFragmentInteractionListener, CreationFragment.OnFragmentInteractionListener, CreationFragment.OnCreationFragmentListener {
@@ -73,8 +70,6 @@ public class MainActivity extends AppCompatActivity
         helper.addQuestion(question1);
         helper.addQuestion(question2);
 
-        //questions.add(question1);
-        //questions.add(question2);
 
     }
 

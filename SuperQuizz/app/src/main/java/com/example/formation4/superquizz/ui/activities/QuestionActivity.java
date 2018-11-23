@@ -8,18 +8,20 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.formation4.superquizz.database.QuestionDatabaseHelper;
 import com.example.formation4.superquizz.model.Question;
 import com.example.formation4.superquizz.R;
+import com.example.formation4.superquizz.ui.ThreadTask.DelayTask;
 
-public class QuestionActivity extends AppCompatActivity {
+public class QuestionActivity extends AppCompatActivity implements DelayTask.onDelayTaskListener{
 
     private TextView intituleQuestion;
     private Question question1;
-    private Button response1, response2, response3, response4;
-
+    private Button answer1, answer2, answer3, answer4;
+    private ProgressBar pb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,22 +30,32 @@ public class QuestionActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        pb = findViewById(R.id.progressBar1);
+
         question1 = getIntent().getParcelableExtra("QUESTION");
 
-        response1 = findViewById(R.id.response1);
-        response1.setText(question1.getPropositions().get(0));
+        answer1 = findViewById(R.id.answer1);
+        answer1.setText(question1.getPropositions().get(0));
 
-        response2 = findViewById(R.id.response2);
-        response2.setText(question1.getPropositions().get(1));
+        answer2 = findViewById(R.id.answer2);
+        answer2.setText(question1.getPropositions().get(1));
 
-        response3 = findViewById(R.id.response3);
-        response3.setText(question1.getPropositions().get(2));
+        answer3 = findViewById(R.id.answer3);
+        answer3.setText(question1.getPropositions().get(2));
 
-        response4 = findViewById(R.id.response4);
-        response4.setText(question1.getPropositions().get(3));
+        answer4 = findViewById(R.id.answer4);
+        answer4.setText(question1.getPropositions().get(3));
 
         intituleQuestion = findViewById(R.id.textView);
         intituleQuestion.setText(question1.getIntitule());
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        DelayTask delayTask = new DelayTask(QuestionActivity.this);
+        delayTask.execute();
 
     }
 
@@ -63,4 +75,47 @@ public class QuestionActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    public void willStart() {
+        pb.setVisibility(ProgressBar.VISIBLE);
+    }
+
+    @Override
+    public void onProgress(int progress) {
+        pb.setProgress(progress);
+    }
+
+    @Override
+    public void onFinish() {
+
+
+    }
+
+   /* private class DelayTask extends AsyncTask<Void, Integer, String>{
+        int count = 0;
+
+
+        @Override
+        protected void onPreExecute(){
+            pb.setVisibility(ProgressBar.VISIBLE);
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            while(count < 5){
+                SystemClock.sleep(1000);
+                count++;
+                publishProgress(count * 20);
+            }
+            return "Complete";
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values){
+            pb.setProgress(values[0]);
+        }
+    }*/
+
+
 }
+

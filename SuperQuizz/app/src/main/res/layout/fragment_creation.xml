@@ -11,7 +11,7 @@
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:imeOptions="actionNext"
-           android:nextFocusForward="@id/input_response1"
+           android:nextFocusForward="@id/input_answer1"
            android:inputType="text"
            />
 
@@ -32,16 +32,16 @@
 
         android:layout_margin="15dp">
         <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/radio_response1"
+            android:id="@+id/radio_answer1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@drawable/rounded_corner_radio"/>
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/input_response1"
+            android:id="@+id/input_answer1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:imeOptions="actionNext"
-            android:nextFocusForward="@id/input_response2"
+            android:nextFocusForward="@id/input_answer2"
             android:inputType="text"
             android:background="@drawable/rounded_corner_input"
             />
@@ -54,16 +54,16 @@
 
         android:layout_margin="15dp">
         <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/radio_response2"
+            android:id="@+id/radio_answer2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@drawable/rounded_corner_radio"/>
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/input_response2"
+            android:id="@+id/input_answer2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:imeOptions="actionNext"
-            android:nextFocusForward="@id/input_response3"
+            android:nextFocusForward="@id/input_answer3"
             android:inputType="text"
             android:background="@drawable/rounded_corner_input"
             />
@@ -75,16 +75,16 @@
 
         android:layout_margin="15dp">
         <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/radio_response3"
+            android:id="@+id/radio_answer3"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@drawable/rounded_corner_radio"/>
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/input_response3"
+            android:id="@+id/input_answer3"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:imeOptions="actionNext"
-            android:nextFocusForward="@id/input_response4"
+            android:nextFocusForward="@id/input_answer4"
             android:inputType="text"
             android:background="@drawable/rounded_corner_input"
             />
@@ -96,14 +96,14 @@
 
         android:layout_margin="15dp">
         <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/radio_response4"
+            android:id="@+id/radio_answer4"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@drawable/rounded_corner_radio"/>
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/input_response4"
+            android:id="@+id/input_answer4"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:background="@drawable/rounded_corner_input"
@@ -116,7 +116,7 @@
         android:layout_height="match_parent">
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/validate_button"
+            android:id="@+id/button_validate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
