@@ -3,6 +3,7 @@ package com.example.formation4.superquizz.ui.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
@@ -14,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.formation4.superquizz.api.APIClient;
 import com.example.formation4.superquizz.database.QuestionDatabaseHelper;
@@ -58,36 +60,27 @@ public class MainActivity extends AppCompatActivity
 
 
         final QuestionDatabaseHelper helper = QuestionDatabaseHelper.getInstance(this);
-        helper.deleteAllQuestions();
+        //helper.deleteAllQuestions();
 
-        /*Question question1 = new Question("Quelle est la capitale de la France ?", "Paris");
-        question1.addProposition("Madrid");
-        question1.addProposition("Versailles");
-        question1.addProposition("Paris");
-        question1.addProposition("Londres");
 
-        Question question2 = new Question("En quelle année l'Homme a t-il posé pour la première fois le pied sur la Lune ?", "1969");
-        question2.addProposition("1968");
-        question2.addProposition("1969");
-        question2.addProposition("1970");
-        question2.addProposition("1971");
-
-        helper.addQuestion(question1);
-        helper.addQuestion(question2);*/
-
-        APIClient apiClient = new APIClient();
+        APIClient apiClient = APIClient.getInstance();
         apiClient.getQuestions(new APIClient.APIResult<List<Question>>() {
             @Override
             public void onFailure(IOException e) {
                 Log.e("DEBUG", e.toString());
+                FragmentManager fragmentManager= getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                playDisplay(fragmentTransaction);
+
             }
 
             @Override
             public void OnSuccess(List<Question> object) throws IOException {
                 Log.d("DEBUG", object.toString());
-                for(int i=0; i<object.size();i++){
-                    helper.addQuestion(object.get(i));
-                }
+
+
+                helper.synchroniseDatabaseQuestions(object);
+
                 FragmentManager fragmentManager= getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 playDisplay(fragmentTransaction);
@@ -184,6 +177,7 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra("QUESTION", item);
         startActivity(intent);
     }
+
 
     @Override
     public void onFragmentInteraction(Question q) {

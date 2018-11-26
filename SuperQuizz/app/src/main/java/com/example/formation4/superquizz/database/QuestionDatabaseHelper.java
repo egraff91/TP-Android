@@ -87,6 +87,7 @@ public class QuestionDatabaseHelper extends SQLiteOpenHelper {
             values.put(KEY_RESPONSE_4, propositions.get(3));
 
             values.put(KEY_RESPONSE, q.getBonneReponse());
+            values.put(KEY_QUESTION_ID, q.getId());
 
             db.insertOrThrow(TABLE_QUESTIONS, null, values);
             db.setTransactionSuccessful();
@@ -97,13 +98,32 @@ public class QuestionDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public int updateQuestion(Question q, String userResponse){
+    public int updateUserAnswer(Question q, String userResponse){
         SQLiteDatabase db = this.getWritableDatabase();
+
 
         ContentValues values = new ContentValues();
         values.put(KEY_USER_RESPONSE, userResponse);
 
         return db.update(TABLE_QUESTIONS, values, KEY_QUESTION + "= ?", new String[]{q.getIntitule()});
+    }
+
+    public int updateQuestion(Question question){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ArrayList<String> propositions = question.getPropositions();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_QUESTION, question.getIntitule());
+
+        values.put(KEY_RESPONSE_1, propositions.get(0));
+        values.put(KEY_RESPONSE_2, propositions.get(1));
+        values.put(KEY_RESPONSE_3, propositions.get(2));
+        values.put(KEY_RESPONSE_4, propositions.get(3));
+
+        values.put(KEY_RESPONSE, question.getBonneReponse());
+
+        return db.update(TABLE_QUESTIONS, values, KEY_QUESTION_ID + "= ?", new String[]{""+question.getId()});
+
     }
 
     public List<Question> getAllQuestions(){
@@ -147,4 +167,57 @@ public class QuestionDatabaseHelper extends SQLiteOpenHelper {
             Log.d("DEBUG", "Error while trying to delete all questions");
         }
     }
+
+    public void deleteQuestion(Question question){
+        SQLiteDatabase db = getWritableDatabase();
+        try{
+            db.delete(TABLE_QUESTIONS, KEY_QUESTION_ID+"= ?",new String[]{""+question.getId()});
+
+        } catch (Exception e){
+
+        }
+
+    }
+
+    public void synchroniseDatabaseQuestions(List<Question> serverQuestions) {
+
+        //TODO: Change getDatabase Question to have the real questions
+        List<Question> databaseQuestions = getAllQuestions();
+
+
+        // Here we will choose if we need to add or to update the question return by the server
+        for (Question serverQuestion: serverQuestions) {
+            boolean found = false;
+            for (Question dataBaseQuestion: databaseQuestions) {
+                if (serverQuestion.getId() == dataBaseQuestion.getId()){
+                    found =true;
+                    break;
+                }
+            }
+
+            if (found) {
+                updateQuestion(serverQuestion);
+            } else {
+                addQuestion(serverQuestion);
+            }
+        }
+
+        // Now we want to delete the question if thy are not on the server anymore
+        for (Question dataBaseQuestion: databaseQuestions) {
+            boolean found = false;
+            for (Question serverQuestion: serverQuestions) {
+                if (serverQuestion.getId() == dataBaseQuestion.getId()){
+                    found =true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                Log.d("DEBUG", "Question id "+dataBaseQuestion.getId());
+                deleteQuestion(dataBaseQuestion);
+            }
+        }
+    }
 }
+
+

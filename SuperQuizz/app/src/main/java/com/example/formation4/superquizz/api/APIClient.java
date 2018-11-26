@@ -15,7 +15,6 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -61,12 +60,10 @@ public class APIClient {
                         String title = jsonQuestion.getString("title");
                         String indexCorrectAnswer = jsonQuestion.getString("correct_answer");
                         String correctAnswer = jsonQuestion.getString("answer_"+indexCorrectAnswer);
+                        int id = jsonQuestion.getInt("id");
 
                         Question newQuestion = new Question(title,correctAnswer);
-                        /*
-                        for(int j=1; j<5; j++){
-                            propositions.add(jsonQuestion.getString("answer_"+j));
-                        }*/
+
 
                         propositions.add(jsonQuestion.getString("answer_1"));
                         propositions.add(jsonQuestion.getString("answer_2"));
@@ -75,14 +72,13 @@ public class APIClient {
 
 
                         newQuestion.setPropositions(propositions);
+                        newQuestion.setId(id);
                         questions.add(newQuestion);
                     }
-                    //Log.d("DEBUG", responseData);
                } catch (JSONException e){
                     Log.e("DEBUG", e.toString());
                 }
 
-                // TODO : Lire les questions depuis la reponse et les ajouter à la liste
 
                 result.OnSuccess(questions);
             }
@@ -94,35 +90,67 @@ public class APIClient {
 
     }
 
-    public void updateQuestion(Question question, APIResult<Question> result){
+    public void deleteQuestion(final Question question, final APIResult<Question> result){
+
+
+        Request request = new Request.Builder()
+                .url(URL+"/"+question.getId())
+                .delete()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                result.onFailure(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                result.OnSuccess(question);
+            }
+        });
+
+    }
+
+    public void updateQuestion(final Question question, final APIResult<Question> result){
+
+
+
+        JSONObject jsonQuestion = questionToJSON(question);
+
+        RequestBody body = RequestBody.create(JSON, jsonQuestion.toString());
+
+        Request request = new Request.Builder()
+                .url(URL+"/"+question.getId())
+                .put(body)
+                .build();
+
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                result.onFailure(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                result.OnSuccess(question);
+
+            }
+        });
+
+
+
+
         
 
     }
 
-    public void createQuestion(Question question, APIResult<Question> result){
+    public void createQuestion(final Question question, final APIResult<Question> result){
 
-        JSONObject jsonQuestion = new JSONObject();
-        ArrayList<String> propositions = question.getPropositions();
-        int indexCorrectAnswer = 1;
-        try{
-            jsonQuestion.put("title", question.getIntitule());
-           for(int i=0; i<propositions.size();i++){
-               jsonQuestion.put("answer_"+(i+1), propositions.get(i));
+        JSONObject jsonQuestion = questionToJSON(question);
 
-               if(propositions.get(i).equals(question.getBonneReponse())){
-                   indexCorrectAnswer = i+1;
-               }
-           }
-
-           jsonQuestion.put("correct_answer", indexCorrectAnswer);
-           jsonQuestion.put("author_img_url", AUTHOR_IMG_URL);
-           jsonQuestion.put("author", AUTHOR);
-
-
-
-        }catch (JSONException e){
-
-        }
 
         RequestBody body = RequestBody.create(JSON, jsonQuestion.toString());
         Request request = new Request.Builder()
@@ -130,7 +158,55 @@ public class APIClient {
                 .post(body)
                 .build();
 
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                result.OnSuccess(question);
+
+            }
+        });
+
+
+
     }
+
+    public JSONObject questionToJSON(Question question){
+        JSONObject jsonQuestion = new JSONObject();
+
+        ArrayList<String> propositions = question.getPropositions();
+        int indexCorrectAnswer = 1;
+        try{
+            jsonQuestion.put("title", question.getIntitule());
+            for(int i=0; i<propositions.size();i++){
+                jsonQuestion.put("answer_"+(i+1), propositions.get(i));
+
+                if(propositions.get(i).equals(question.getBonneReponse())){
+                    indexCorrectAnswer = i+1;
+                }
+            }
+
+            jsonQuestion.put("correct_answer", indexCorrectAnswer);
+            jsonQuestion.put("author_img_url", AUTHOR_IMG_URL);
+            jsonQuestion.put("author", AUTHOR);
+
+
+
+        }catch (JSONException e){
+            Log.e("DEBUG", e.getMessage());
+        }
+
+        return jsonQuestion;
+
+    }
+
+
+
 
     public interface APIResult<T> {
         void onFailure(IOException e);

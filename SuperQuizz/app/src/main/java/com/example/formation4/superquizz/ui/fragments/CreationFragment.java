@@ -12,7 +12,10 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 
 import com.example.formation4.superquizz.R;
+import com.example.formation4.superquizz.api.APIClient;
 import com.example.formation4.superquizz.model.Question;
+
+import java.io.IOException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -117,54 +120,58 @@ public class CreationFragment extends Fragment {
         rootView.findViewById(R.id.button_validate).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                if((inputAnswer1.getText()!= null)){
-                    if(inputAnswer2.getText() != null) {
 
-                    } if(inputAnswer3.getText() != null ){
-
-                    } if(inputAnswer4.getText()!= null){
-
-                    }
-                }
                 if(!radioSelect){
                    Snackbar.make(v, "Sélectionnez une réponse", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                }else{
                    Log.d("DEBUG", "Valider");
                    Log.d("DEBUG", "Question : "+inputQuestion.getText());
-                   String bonneReponse;
+                   String correctAnswer;
 
                    switch(lastRadio.getId()){
                        case R.id.radio_answer1:
-                           bonneReponse = inputAnswer1.getText().toString();
+                           correctAnswer = inputAnswer1.getText().toString();
                            break;
 
                        case R.id.radio_answer2:
-                           bonneReponse = inputAnswer2.getText().toString();
+                           correctAnswer = inputAnswer2.getText().toString();
                             break;
                        case R.id.radio_answer3:
-                           bonneReponse = inputAnswer3.getText().toString();
+                           correctAnswer = inputAnswer3.getText().toString();
                            break;
                        case R.id.radio_answer4:
-                           bonneReponse = inputAnswer4.getText().toString();
+                           correctAnswer = inputAnswer4.getText().toString();
                            break;
                        default:
-                           bonneReponse = inputAnswer1.getText().toString();
+                           correctAnswer = inputAnswer1.getText().toString();
                            break;
 
                     }
                    Log.d("DEBUG",lastRadio.getResources().getResourceName(lastRadio.getId()));
-                   Question question = new Question(inputQuestion.getText().toString(), bonneReponse);
+                   final Question question = new Question(inputQuestion.getText().toString(), correctAnswer);
 
                    question.addProposition(inputAnswer1.getText().toString());
                    question.addProposition(inputAnswer2.getText().toString());
                    question.addProposition(inputAnswer3.getText().toString());
                    question.addProposition(inputAnswer4.getText().toString());
-                    listener.createQuestion(question);
+
+                    APIClient.getInstance().createQuestion(question, new APIClient.APIResult<Question>() {
+                        @Override
+                        public void onFailure(IOException e) {
+                            Log.e("DEBUG", "erreur ajout question");
+                        }
+
+                        @Override
+                        public void OnSuccess(Question object) throws IOException {
+                            listener.createQuestion(question);
+                            Log.d("DEBUG", "question créée");
+
+                        }
+                    });
                }
             }
         });
         return rootView;
-        //return inflater.inflate(R.layout.fragment_creation, container, false);
     }
 
 

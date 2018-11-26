@@ -71,7 +71,7 @@ public class QuestionActivity extends AppCompatActivity implements DelayTask.onD
             intent.setData(Uri.parse("fail"));
         }
 
-        QuestionDatabaseHelper.getInstance(this).updateQuestion(question1, clickedButton.getText().toString());
+        QuestionDatabaseHelper.getInstance(this).updateUserAnswer(question1, clickedButton.getText().toString());
         startActivity(intent);
     }
 
@@ -90,31 +90,6 @@ public class QuestionActivity extends AppCompatActivity implements DelayTask.onD
 
 
     }
-
-   /* private class DelayTask extends AsyncTask<Void, Integer, String>{
-        int count = 0;
-
-
-        @Override
-        protected void onPreExecute(){
-            pb.setVisibility(ProgressBar.VISIBLE);
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            while(count < 5){
-                SystemClock.sleep(1000);
-                count++;
-                publishProgress(count * 20);
-            }
-            return "Complete";
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values){
-            pb.setProgress(values[0]);
-        }
-    }*/
 
 
 }

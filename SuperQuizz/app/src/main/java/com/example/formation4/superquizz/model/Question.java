@@ -12,6 +12,16 @@ public class Question implements Parcelable {
     private String bonneReponse;
     private TypeQuestion type;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    private int id;
+
     public Question(String intitule, String bonneReponse) {
         this.intitule = intitule;
         this.bonneReponse = bonneReponse;

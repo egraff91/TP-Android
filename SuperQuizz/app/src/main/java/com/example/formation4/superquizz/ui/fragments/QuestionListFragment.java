@@ -2,6 +2,7 @@ package com.example.formation4.superquizz.ui.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -63,9 +64,6 @@ public class QuestionListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //ArrayList<Question> questions = this.getArguments().getParcelableArrayList("Questions");
-
-
 
         View view = inflater.inflate(R.layout.fragment_question_list, container, false);
 
@@ -74,7 +72,8 @@ public class QuestionListFragment extends Fragment {
             Context context = view.getContext();
             helper = QuestionDatabaseHelper.getInstance(context);
             ArrayList<Question> questions = (ArrayList<Question>)helper.getAllQuestions();
-                    RecyclerView recyclerView = (RecyclerView) view;
+            RecyclerView recyclerView = (RecyclerView) view;
+
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
