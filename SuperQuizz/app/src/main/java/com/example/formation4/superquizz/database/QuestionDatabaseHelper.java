@@ -15,11 +15,12 @@ import java.util.List;
 public class QuestionDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "qcm";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     private static final String TABLE_QUESTIONS = "questions";
 
     private static final String KEY_QUESTION_ID = "id";
+    private static final String KEY_QUESTION_SERVER_ID = "server_id";
     private static final String KEY_QUESTION = "question";
     private static final String KEY_RESPONSE_1 = "response_1";
     private static final String KEY_RESPONSE_2 = "response_2";
@@ -27,13 +28,15 @@ public class QuestionDatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_RESPONSE_4 = "response_4";
     private static final String KEY_RESPONSE = "response";
     private static final String KEY_USER_RESPONSE = "user_response";
+    private static final String KEY_AUTHOR_IMAGE_URL = "author_image_url";
+    private static final String KEY_AUTHOR = "author";
 
     private static QuestionDatabaseHelper sInstance;
 
     public static synchronized QuestionDatabaseHelper getInstance(Context context){
         if(sInstance == null){
             sInstance = new QuestionDatabaseHelper(context.getApplicationContext());
-        }
+       }
         return sInstance;
     }
 
@@ -52,13 +55,16 @@ public class QuestionDatabaseHelper extends SQLiteOpenHelper {
         String CREATE_QUESTIONS_TABLE = "CREATE TABLE " + TABLE_QUESTIONS +
                 " (" +
                     KEY_QUESTION_ID + " INTEGER PRIMARY KEY, " +
+                    KEY_QUESTION_SERVER_ID + " INTEGER, " +
                     KEY_QUESTION + " VARCHAR(200), " +
                     KEY_RESPONSE_1 + " VARCHAR(100), "+
                     KEY_RESPONSE_2 + " VARCHAR(100), "+
                     KEY_RESPONSE_3 + " VARCHAR(100), "+
                     KEY_RESPONSE_4 + " VARCHAR(100), "+
                     KEY_RESPONSE + " VARCHAR(100), "+
-                    KEY_USER_RESPONSE + " VARCHAR(100)"+
+                    KEY_USER_RESPONSE + " VARCHAR(100), "+
+                    KEY_AUTHOR_IMAGE_URL + " VARCHAR(100), "+
+                    KEY_AUTHOR+ " VARCHAR(100)"+
                 ")";
         db.execSQL(CREATE_QUESTIONS_TABLE);
     }
@@ -87,12 +93,13 @@ public class QuestionDatabaseHelper extends SQLiteOpenHelper {
             values.put(KEY_RESPONSE_4, propositions.get(3));
 
             values.put(KEY_RESPONSE, q.getBonneReponse());
-            values.put(KEY_QUESTION_ID, q.getId());
+            values.put(KEY_QUESTION_SERVER_ID, q.getId());
+            values.put(KEY_USER_RESPONSE, (String) null);
 
             db.insertOrThrow(TABLE_QUESTIONS, null, values);
             db.setTransactionSuccessful();
         } catch(Exception e){
-            Log.d("DEBUG", "Error while trying to add question to database");
+            Log.d("DEBUG", e.toString());
         } finally {
             db.endTransaction();
         }
@@ -121,14 +128,35 @@ public class QuestionDatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_RESPONSE_4, propositions.get(3));
 
         values.put(KEY_RESPONSE, question.getBonneReponse());
+        values.put(KEY_QUESTION_SERVER_ID, question.getId());
 
-        return db.update(TABLE_QUESTIONS, values, KEY_QUESTION_ID + "= ?", new String[]{""+question.getId()});
+        return db.update(TABLE_QUESTIONS, values, KEY_QUESTION_SERVER_ID + "= ?", new String[]{""+question.getId()});
 
     }
 
+    public String getUserAnswer(Question question){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+       String USER_ANSWER_QUERY = String.format("SELECT %s FROM %s WHERE %s = %s", KEY_USER_RESPONSE, TABLE_QUESTIONS, KEY_QUESTION_SERVER_ID, question.getId());
+
+        Cursor cursor = db.rawQuery(USER_ANSWER_QUERY, null);
+        String result = "";
+        try {
+            if(cursor.moveToFirst()){
+                result = cursor.getString(cursor.getColumnIndex(KEY_USER_RESPONSE));
+            }
+
+        }catch (Exception e){
+
+        }
+        return result;
+    }
+
     public List<Question> getAllQuestions(){
+
         List<Question> questions = new ArrayList<>();
         ArrayList<String> propositions;
+
 
         String QUESTIONS_SELECT_QUERY =
                 String.format("SELECT * FROM %s",
@@ -146,6 +174,10 @@ public class QuestionDatabaseHelper extends SQLiteOpenHelper {
                     propositions.add(cursor.getString(cursor.getColumnIndex(KEY_RESPONSE_3)));
                     propositions.add(cursor.getString(cursor.getColumnIndex(KEY_RESPONSE_4)));
                     question.setPropositions(propositions);
+
+                    question.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(KEY_QUESTION_SERVER_ID))));
+                    question.setImageAuthorURL(cursor.getString(cursor.getColumnIndex(KEY_AUTHOR_IMAGE_URL)));
+                    question.setAuthor(cursor.getString(cursor.getColumnIndex(KEY_AUTHOR)));
                     questions.add(question);
                 }while(cursor.moveToNext());
             }
@@ -171,7 +203,7 @@ public class QuestionDatabaseHelper extends SQLiteOpenHelper {
     public void deleteQuestion(Question question){
         SQLiteDatabase db = getWritableDatabase();
         try{
-            db.delete(TABLE_QUESTIONS, KEY_QUESTION_ID+"= ?",new String[]{""+question.getId()});
+            db.delete(TABLE_QUESTIONS, KEY_QUESTION_SERVER_ID+"= ?",new String[]{""+question.getId()});
 
         } catch (Exception e){
 
@@ -181,7 +213,6 @@ public class QuestionDatabaseHelper extends SQLiteOpenHelper {
 
     public void synchroniseDatabaseQuestions(List<Question> serverQuestions) {
 
-        //TODO: Change getDatabase Question to have the real questions
         List<Question> databaseQuestions = getAllQuestions();
 
 
@@ -193,13 +224,17 @@ public class QuestionDatabaseHelper extends SQLiteOpenHelper {
                     found =true;
                     break;
                 }
-            }
 
+
+
+
+            }
             if (found) {
                 updateQuestion(serverQuestion);
             } else {
                 addQuestion(serverQuestion);
             }
+
         }
 
         // Now we want to delete the question if thy are not on the server anymore

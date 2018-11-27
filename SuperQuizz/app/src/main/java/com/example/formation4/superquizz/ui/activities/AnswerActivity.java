@@ -10,8 +10,6 @@ import com.example.formation4.superquizz.R;
 
 public class AnswerActivity extends AppCompatActivity {
 
-    private ImageButton success;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +18,7 @@ public class AnswerActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        success = findViewById(R.id.success);
+        ImageButton success = findViewById(R.id.success);
 
         Intent intent = this.getIntent();
 

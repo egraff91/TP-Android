@@ -3,10 +3,9 @@ package com.example.formation4.superquizz.ui.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,14 +14,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
+import com.example.formation4.superquizz.R;
 import com.example.formation4.superquizz.api.APIClient;
 import com.example.formation4.superquizz.database.QuestionDatabaseHelper;
 import com.example.formation4.superquizz.model.Question;
 import com.example.formation4.superquizz.ui.fragments.CreationFragment;
-import com.example.formation4.superquizz.ui.fragments.PlayFragment;
-import com.example.formation4.superquizz.R;
 import com.example.formation4.superquizz.ui.fragments.QuestionListFragment;
 import com.example.formation4.superquizz.ui.fragments.ScoreFragment;
 import com.example.formation4.superquizz.ui.fragments.SettingsFragment;
@@ -31,7 +28,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, PlayFragment.OnFragmentInteractionListener, ScoreFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener, QuestionListFragment.OnListFragmentInteractionListener, CreationFragment.OnFragmentInteractionListener, CreationFragment.OnCreationFragmentListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ScoreFragment.OnFragmentInteractionListener, QuestionListFragment.OnListFragmentInteractionListener, CreationFragment.OnFragmentInteractionListener, CreationFragment.OnCreationFragmentListener {
 
 
 
@@ -60,8 +57,6 @@ public class MainActivity extends AppCompatActivity
 
 
         final QuestionDatabaseHelper helper = QuestionDatabaseHelper.getInstance(this);
-        //helper.deleteAllQuestions();
-
 
         APIClient apiClient = APIClient.getInstance();
         apiClient.getQuestions(new APIClient.APIResult<List<Question>>() {
@@ -87,7 +82,6 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-
 
     }
 

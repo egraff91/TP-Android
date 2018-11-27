@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.PlayFragment">
 
-    <!-- TODO: Update blank fragment layout -->
 
     <Button
         android:id="@+id/button_play"

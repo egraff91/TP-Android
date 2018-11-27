@@ -1,7 +1,11 @@
 package com.example.formation4.superquizz.ui.fragments;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,7 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
+import com.example.formation4.superquizz.NetworkChangeReceiver;
 import com.example.formation4.superquizz.R;
 import com.example.formation4.superquizz.api.APIClient;
 import com.example.formation4.superquizz.model.Question;
@@ -40,6 +46,7 @@ public class CreationFragment extends Fragment {
 
     private Boolean radioSelect = false;
     private RadioButton lastRadio;
+    FloatingActionButton buttonValidate;
 
     public CreationFragment() {
         // Required empty public constructor
@@ -70,7 +77,31 @@ public class CreationFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        registerReceiver();
     }
+
+    private void registerReceiver(){
+        try{
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(NetworkChangeReceiver.NETWORK_CHANGE_ACTION);
+            getActivity().registerReceiver(internalNetworkChangeReceiver, intentFilter);
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPause(){
+        try {
+            getActivity().unregisterReceiver(internalNetworkChangeReceiver);
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+        super.onPause();
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -117,7 +148,8 @@ public class CreationFragment extends Fragment {
             }
         });
 
-        rootView.findViewById(R.id.button_validate).setOnClickListener(new View.OnClickListener(){
+        buttonValidate = rootView.findViewById(R.id.button_validate);
+        buttonValidate.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
 
@@ -218,6 +250,23 @@ public class CreationFragment extends Fragment {
         }else{
             lastRadio.setChecked(false);
             lastRadio = (RadioButton)v;
+        }
+    }
+
+    InternalNetworkChangeReceiver internalNetworkChangeReceiver = new InternalNetworkChangeReceiver();
+    String actualStatus="";
+
+    class  InternalNetworkChangeReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+                String status = intent.getStringExtra("status");
+                if(!status.equals(actualStatus)){
+                    Toast.makeText(context, status, Toast.LENGTH_SHORT).show();
+                    actualStatus = status;
+                }
+
         }
     }
 }

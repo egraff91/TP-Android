@@ -1,7 +1,6 @@
 package com.example.formation4.superquizz.ui.fragments;
 
-import android.content.Context;
-import android.net.Uri;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,58 +8,35 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.formation4.superquizz.R;
+import com.example.formation4.superquizz.database.QuestionDatabaseHelper;
+import com.example.formation4.superquizz.model.Question;
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.utils.MPPointF;
+
+import java.util.ArrayList;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ScoreFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ScoreFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ScoreFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+
+
+    private PieChart chart;
+
+    private QuestionDatabaseHelper helper = QuestionDatabaseHelper.getInstance(getContext());
 
     public ScoreFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ScoreFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ScoreFragment newInstance(String param1, String param2) {
-        ScoreFragment fragment = new ScoreFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,42 +45,112 @@ public class ScoreFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_score, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+    public void onStart(){
+        super.onStart();
+        chart = getView().findViewById(R.id.chart1);
+        chart.setUsePercentValues(true);
+        chart.getDescription().setEnabled(false);
+        chart.setExtraOffsets(5,10,5,5);
+
+        chart.setDragDecelerationFrictionCoef(0.95f);
+
+        chart.setDrawHoleEnabled(true);
+        chart.setHoleColor(Color.WHITE);
+
+        chart.setTransparentCircleColor(Color.WHITE);
+        chart.setTransparentCircleAlpha(110);
+
+        chart.setHoleRadius(10f);
+        chart.setTransparentCircleRadius(61f);
+
+        chart.setRotationAngle(0);
+        chart.setRotationEnabled(true);
+
+        chart.animateY(1400, Easing.EaseInOutQuad);
+
+        Legend l = chart.getLegend();
+
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setDrawInside(false);
+        l.setXEntrySpace(7f);
+        l.setYEntrySpace(0f);
+        l.setYOffset(0f);
+
+
+        chart.setEntryLabelColor(Color.BLACK);
+        chart.setEntryLabelTextSize(12f);
+
+        updateChart();
+    }
+
+    private void updateChart(){
+        ArrayList<PieEntry> entries = new ArrayList<>();
+
+        ArrayList<Question> questions = (ArrayList<Question>)helper.getAllQuestions();
+
+        int correctAnswersCount = 0;
+        int wrongAnswersCount = 0;
+        int unansweredQuestionCount = 0;
+        String userAnswer;
+
+        for(int i=0; i<questions.size();i++){
+
+            userAnswer = helper.getUserAnswer(questions.get(i));
+
+            if(userAnswer != null){
+                if(userAnswer.equals(questions.get(i).getBonneReponse())){
+                    correctAnswersCount++;
+                } else{
+                    wrongAnswersCount++;
+                }
+            }else{
+                unansweredQuestionCount++;
+            }
         }
+
+
+
+        int total = correctAnswersCount + wrongAnswersCount + unansweredQuestionCount;
+
+        ArrayList<PieEntry> questionEntries = new ArrayList<>();
+
+        questionEntries.add(new PieEntry((float)correctAnswersCount/(float)(total),"Bonnes réponses"));
+        questionEntries.add(new PieEntry((float)wrongAnswersCount/(float)(total),"Mauvaises réponses"));
+        questionEntries.add(new PieEntry((float)unansweredQuestionCount/(float)(total),"A faire"));
+
+        PieDataSet dataSet = new PieDataSet(questionEntries, "");
+
+        dataSet.setSliceSpace(3f);
+        dataSet.setIconsOffset(new MPPointF(0,40));
+        dataSet.setSelectionShift(5f);
+
+        ArrayList<Integer> colors = new ArrayList<>();
+
+        colors.add(Color.GREEN);
+        colors.add(Color.RED);
+        colors.add(Color.LTGRAY);
+
+        dataSet.setColors(colors);
+
+        PieData data = new PieData(dataSet);
+        data.setValueFormatter(new PercentFormatter());
+        data.setValueTextSize(11f);
+        data.setValueTextColor(Color.BLACK);
+        chart.setData(data);
+
+        // undo all highlights
+        chart.highlightValues(null);
+
+        chart.invalidate();
+
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
+
 }

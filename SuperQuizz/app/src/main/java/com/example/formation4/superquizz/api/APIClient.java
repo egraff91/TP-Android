@@ -84,9 +84,6 @@ public class APIClient {
             }
         });
 
-        //TODO : Faire un update
-        //TODO : Faire un delete
-
 
     }
 
@@ -141,9 +138,6 @@ public class APIClient {
         });
 
 
-
-
-        
 
     }
 
@@ -204,8 +198,6 @@ public class APIClient {
         return jsonQuestion;
 
     }
-
-
 
 
     public interface APIResult<T> {

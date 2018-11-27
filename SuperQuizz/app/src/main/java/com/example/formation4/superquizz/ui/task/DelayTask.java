@@ -1,4 +1,4 @@
-package com.example.formation4.superquizz.ui.ThreadTask;
+package com.example.formation4.superquizz.ui.task;
 
 
 import android.os.AsyncTask;
@@ -18,25 +18,22 @@ public class DelayTask extends AsyncTask<Void, Integer, String> {
 
     @Override
     protected void onPreExecute(){
-        //pb.setVisibility(ProgressBar.VISIBLE);
         listener.willStart();
     }
 
     @Override
     protected String doInBackground(Void... voids) {
-        //super.doInBackground(voids);
         while(count < 5){
             SystemClock.sleep(1000);
             count++;
             publishProgress(count * 20);
         }
-        //listener.onFinish();
+
         return "Complete";
     }
 
     @Override
     protected void onProgressUpdate(Integer... values){
-       // pb.setProgress(values[0]);
         listener.onProgress(values[0]);
     }
 
@@ -45,7 +42,6 @@ public class DelayTask extends AsyncTask<Void, Integer, String> {
     public interface onDelayTaskListener{
         void willStart();
         void onProgress(int progress);
-        void onFinish();
 
     }
 

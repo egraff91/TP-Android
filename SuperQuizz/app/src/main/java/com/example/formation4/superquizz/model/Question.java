@@ -11,6 +11,30 @@ public class Question implements Parcelable {
     private ArrayList<String> propositions;
     private String bonneReponse;
     private TypeQuestion type;
+    private String imageAuthorURL;
+    private String author;
+    private int id;
+
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+
+
+    public String getImageAuthorURL() {
+        return imageAuthorURL;
+    }
+
+    public void setImageAuthorURL(String imageAuthorURL) {
+        this.imageAuthorURL = imageAuthorURL;
+    }
+
+
 
     public int getId() {
         return id;
@@ -20,7 +44,7 @@ public class Question implements Parcelable {
         this.id = id;
     }
 
-    private int id;
+
 
     public Question(String intitule, String bonneReponse) {
         this.intitule = intitule;

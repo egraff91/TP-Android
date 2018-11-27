@@ -1,8 +1,10 @@
 package com.example.formation4.superquizz.ui.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -14,7 +16,7 @@ import android.widget.TextView;
 import com.example.formation4.superquizz.database.QuestionDatabaseHelper;
 import com.example.formation4.superquizz.model.Question;
 import com.example.formation4.superquizz.R;
-import com.example.formation4.superquizz.ui.ThreadTask.DelayTask;
+import com.example.formation4.superquizz.ui.task.DelayTask;
 
 public class QuestionActivity extends AppCompatActivity implements DelayTask.onDelayTaskListener{
 
@@ -71,7 +73,18 @@ public class QuestionActivity extends AppCompatActivity implements DelayTask.onD
             intent.setData(Uri.parse("fail"));
         }
 
-        QuestionDatabaseHelper.getInstance(this).updateUserAnswer(question1, clickedButton.getText().toString());
+        SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if(mSettings.getBoolean("saveAnswer",true)){
+
+            QuestionDatabaseHelper.getInstance(this).updateUserAnswer(question1, clickedButton.getText().toString());
+
+            Log.d("DEBUG", "réponse sauvegardée");
+
+        }else{
+            Log.d("DEBUG", "réponse non sauvegardée");
+        }
+
         startActivity(intent);
     }
 
@@ -85,11 +98,7 @@ public class QuestionActivity extends AppCompatActivity implements DelayTask.onD
         pb.setProgress(progress);
     }
 
-    @Override
-    public void onFinish() {
 
-
-    }
 
 
 }
