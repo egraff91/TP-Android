@@ -1,7 +1,6 @@
 package com.example.formation4.superquizz.ui.activities;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -27,8 +26,12 @@ import com.example.formation4.superquizz.ui.fragments.SettingsFragment;
 import java.io.IOException;
 import java.util.List;
 
+import io.sentry.Sentry;
+import io.sentry.android.AndroidSentryClientFactory;
+import io.sentry.event.BreadcrumbBuilder;
+
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ScoreFragment.OnFragmentInteractionListener, QuestionListFragment.OnListFragmentInteractionListener, CreationFragment.OnFragmentInteractionListener, CreationFragment.OnCreationFragmentListener {
+        implements NavigationView.OnNavigationItemSelectedListener, QuestionListFragment.OnListFragmentInteractionListener, CreationFragment.OnFragmentInteractionListener, CreationFragment.OnCreationFragmentListener {
 
 
 
@@ -44,6 +47,11 @@ public class MainActivity extends AppCompatActivity
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             playDisplay(fragmentTransaction);
         }
+
+        android.content.Context ctx = this.getApplicationContext();
+
+        String sentryDsn = "https://dc5c805c231a4ebf8c676aaa7d966ee6@sentry.io/1365602";
+        Sentry.init(sentryDsn, new AndroidSentryClientFactory(ctx));
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -155,12 +163,6 @@ public class MainActivity extends AppCompatActivity
         QuestionListFragment questionListFragment = new QuestionListFragment();
         fragmentTransaction.replace(R.id.main_container, questionListFragment);
         fragmentTransaction.commit();
-    }
-
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 
 

@@ -12,6 +12,8 @@ import com.example.formation4.superquizz.model.Question;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.sentry.Sentry;
+
 public class QuestionDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "qcm";
@@ -183,6 +185,7 @@ public class QuestionDatabaseHelper extends SQLiteOpenHelper {
             }
         } catch (Exception e){
             Log.d("DEBUG", "Error while trying to get questions from database");
+            Sentry.capture(e);
         } finally {
             if (cursor != null && !cursor.isClosed()){
                 cursor.close();
